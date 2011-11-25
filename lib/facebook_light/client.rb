@@ -48,7 +48,7 @@ module FacebookLight
     def get(query, options = {})
       host = options[:site] || FacebookLight.settings[:site]
       url = "#{host}#{query}?access_token=#{access_token}"
-      Request.new(url).run
+      JSON.parse(Request.new(url).run).with_indifferent_access
     end
 
   end
