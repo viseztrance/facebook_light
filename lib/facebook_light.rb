@@ -1,5 +1,6 @@
 require "base64"
 require "openssl"
+require "cocaine"
 require "facebook_light/version"
 require "facebook_light/request"
 require "facebook_light/client"
