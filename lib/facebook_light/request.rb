@@ -15,7 +15,12 @@ module FacebookLight
     end
 
     def run
-      self.dispatcher.run
+      response = self.dispatcher.run
+      def response.as_json
+        result = JSON.parse(self)
+        result.is_a?(Array) ? result.map(&:with_indifferent_access) : result.with_indifferent_access
+      end
+      response
     end
 
   end

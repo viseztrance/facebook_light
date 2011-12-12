@@ -7,10 +7,11 @@ require "facebook_light/client"
 
 module FacebookLight
 
+  API_URL   = "https://api.facebook.com"
+  GRAPH_URL = "https://graph.facebook.com"
+
   def self.settings
-    @@settings ||= {
-      :site => "https://graph.facebook.com"
-    }
+    @@settings ||= {}
   end
 
   def self.settings=(settings)

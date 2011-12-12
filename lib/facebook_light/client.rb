@@ -45,10 +45,14 @@ module FacebookLight
       self.access_token = access_token
     end
 
-    def get(query, options = {})
-      host = options[:site] || FacebookLight.settings[:site]
-      url = "#{host}#{query}?access_token=#{access_token}"
-      JSON.parse(Request.new(url).run).with_indifferent_access
+    def get(query)
+      url = File.join(GRAPH_URL, "#{query}?access_token=#{access_token}")
+      Request.new(url).run.as_json
+    end
+
+    def fql(query)
+      url = File.join(API_URL, "method/fql.query?format=json&query=#{CGI.escape(query)}&access_token=#{access_token}")
+      Request.new(url).run.as_json
     end
 
   end
