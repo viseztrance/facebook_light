@@ -1,6 +1,8 @@
 require "base64"
 require "openssl"
 require "cocaine"
+require "json"
+require "active_support/core_ext/hash"
 require "facebook_light/version"
 require "facebook_light/request"
 require "facebook_light/client"
