@@ -8,10 +8,11 @@ module FacebookLight
       args = {
         :timeout => "2",
         :retries => "3",
-        :method  => "GET",
-        :url     => url
+        :method  => options[:method] || "GET",
+        :url     => url,
+        :params  => parameterize(options[:params])
       }
-      self.dispatcher = Cocaine::CommandLine.new("curl", "-X :method --connect-timeout :timeout --retry :retries :url", args)
+      self.dispatcher = Cocaine::CommandLine.new("curl", "-X :method --connect-timeout :timeout --retry :retries :url --data :params", args)
     end
 
     def run
@@ -21,6 +22,13 @@ module FacebookLight
         result.is_a?(Array) ? result.map(&:with_indifferent_access) : result.with_indifferent_access
       end
       response
+    end
+
+    private
+
+    # Builds a query string from the received +Hash+.
+    def parameterize(data)
+      (data || {}).map { |k, v| "#{k}=#{v}" }.join("&")
     end
 
   end
