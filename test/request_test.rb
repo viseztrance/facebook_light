@@ -24,12 +24,12 @@ class RequestTest < Test::Unit::TestCase
 
   def test_get_params
     response = Request.new(File.join(TEST_SERVER_URL, "?p1=r1&p2=r2"), :method => "GET").run
-    assert_equal ({ "p1"=>"r1", "p2"=>"r2" }), JSON.parse(response)["rack.request.query_hash"]
+    assert_equal ({ "p1" => "r1", "p2" => "r2" }), JSON.parse(response)["rack.request.query_hash"]
   end
 
   def test_post_params
-    response = Request.new(TEST_SERVER_URL, :method => "POST", :params => { "p1"=>"r1", "p2"=>"r2" }).run
-    assert_equal ({ "p1"=>"r1", "p2"=>"r2" }), JSON.parse(response)["rack.request.form_hash"]
+    response = Request.new(TEST_SERVER_URL, :method => "POST", :params => { "p1" => "r1", "p2" => "r2" }).run
+    assert_equal ({ "p1" => "r1", "p2" => "r2" }), JSON.parse(response)["rack.request.form_hash"]
   end
 
 end
