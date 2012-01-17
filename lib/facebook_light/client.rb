@@ -46,13 +46,25 @@ module FacebookLight
     end
 
     def get(query)
-      url = File.join(GRAPH_URL, "#{query}?access_token=#{access_token}")
+      url = append_access_token File.join(GRAPH_URL, query)
       Request.new(url).run.as_json
     end
 
+    def post(query, params = {})
+      url = append_access_token File.join(GRAPH_URL, query)
+      Request.new(url, { :method => "POST", :params => params }).run.as_json
+    end
+
     def fql(query)
-      url = File.join(API_URL, "method/fql.query?format=json&query=#{CGI.escape(query)}&access_token=#{access_token}")
+      url = append_access_token File.join(API_URL, "method/fql.query?format=json&query=#{CGI.escape(query)}")
       Request.new(url).run.as_json
+    end
+
+    private
+
+    def append_access_token(url)
+      prefix = url.include?("?") ? "&" : "?"
+      "#{url}#{prefix}access_token=#{access_token}"
     end
 
   end
