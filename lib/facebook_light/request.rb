@@ -5,14 +5,15 @@ module FacebookLight
     attr_accessor :dispatcher, :command
 
     def initialize(url, options = {})
+      params = parameterize(options[:params])
       args = {
         :timeout => "2",
         :retries => "3",
         :method  => options[:method] || "GET",
         :url     => url,
-        :params  => parameterize(options[:params])
+        :params  => params
       }
-      self.dispatcher = Cocaine::CommandLine.new("curl", "-X :method --connect-timeout :timeout --retry :retries :url --data :params", args)
+      self.dispatcher = Cocaine::CommandLine.new("curl", "-X :method --connect-timeout :timeout --retry :retries :url #{params}", args)
     end
 
     def run
@@ -28,7 +29,19 @@ module FacebookLight
 
     # Builds a query string from the received +Hash+.
     def parameterize(data)
-      (data || {}).map { |k, v| "#{k}=#{v}" }.join("&")
+      return unless data
+      data.map do |k, v| 
+        if v.is_a?(Hash)
+          value = "@#{v[:path]}"
+          "--form %s=%s" % [k, quote(value)]
+        else
+          "--form-string %s=%s" % [k, quote(v)]
+        end
+      end.join(" ")
+    end
+    
+    def quote(string)
+      string.split("'").map{ |m| "'#{m}'" }.join("\\'")
     end
 
   end
